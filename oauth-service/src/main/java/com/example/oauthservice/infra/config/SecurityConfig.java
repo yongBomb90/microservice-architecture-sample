@@ -34,7 +34,7 @@ public class SecurityConfig {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                UserDetails user = new User("userName", "password", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+                UserDetails user = new User("userName", "{noop}password", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
                 return user;
             }
         };

@@ -9,11 +9,15 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
@@ -35,6 +39,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 @Configuration(proxyBeanMethods = false)
+@Import(OAuth2AuthorizationServerConfiguration.class)
 public class AuthServerConfig {
 
     @Bean
@@ -46,23 +51,18 @@ public class AuthServerConfig {
 
     @Bean
     RegisteredClientRepository registeredClientRepository () {
-        // TODO : client 구성
-        return new RegisteredClientRepository() {
-            @Override
-            public void save(RegisteredClient registeredClient) {
-
-            }
-
-            @Override
-            public RegisteredClient findById(String id) {
-                return new AccountClient();
-            }
-
-            @Override
-            public RegisteredClient findByClientId(String clientId) {
-                return new AccountClient();
-            }
-        };
+        RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
+            .clientId("bomb")
+            .clientSecret("{noop}secret")
+            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+            .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+            .redirectUri("http://127.0.0.1:8888/login/oauth2/code")
+            .redirectUri("http://127.0.0.1:8888/authorized")
+            .scope(OidcScopes.OPENID)
+            .scope("articles.read")
+            .build();
+        return new InMemoryRegisteredClientRepository(registeredClient);
     }
 
     private static KeyPair generateRsaKey() throws NoSuchAlgorithmException {
@@ -105,10 +105,10 @@ public class AuthServerConfig {
         // @formatter:on
     }
 
-    @Bean
-    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
-        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
-    }
+//    @Bean
+//    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
+//        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
+//    }
 
 
 
