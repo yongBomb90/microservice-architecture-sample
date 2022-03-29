@@ -57,7 +57,6 @@ public class AuthServerConfig {
             .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-            .redirectUri("http://127.0.0.1:8888/login/oauth2/code")
             .redirectUri("http://127.0.0.1:8888/authorized")
             .scope(OidcScopes.OPENID)
             .scope("articles.read")
@@ -77,12 +76,10 @@ public class AuthServerConfig {
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
 
-        // @formatter:off
         return new RSAKey.Builder(publicKey)
                 .privateKey(privateKey)
                 .keyID(UUID.randomUUID().toString())
                 .build();
-        // @formatter:on
     }
 
     @Bean
