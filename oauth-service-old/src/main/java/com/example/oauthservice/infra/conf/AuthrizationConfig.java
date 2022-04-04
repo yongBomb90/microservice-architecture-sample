@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 @EnableAuthorizationServer
 @Configuration
@@ -39,6 +40,9 @@ public class AuthrizationConfig extends AuthorizationServerConfigurerAdapter {
     @Resource
     AuthenticationManager authenticationManager;
 
+    @Autowired
+    DataSource dataSource;
+
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         super.configure(security);
@@ -56,12 +60,10 @@ public class AuthrizationConfig extends AuthorizationServerConfigurerAdapter {
                 .accessTokenValiditySeconds(10*60)
                 .refreshTokenValiditySeconds(60*10*60)
         ;
-        //super.configure(clients);
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        //super.configure(endpoints);
         endpoints
                 .authenticationManager(authenticationManager )
                 .tokenStore(tokenStore)
