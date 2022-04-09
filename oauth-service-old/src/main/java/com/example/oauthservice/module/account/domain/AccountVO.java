@@ -15,7 +15,7 @@ import java.util.Collection;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account implements UserDetails {
+public class AccountVO implements UserDetails {
 
     private String email;
     private String secret;

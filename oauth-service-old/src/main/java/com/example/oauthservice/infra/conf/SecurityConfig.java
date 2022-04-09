@@ -31,12 +31,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Bean
-    PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Bean
-    JwtAccessTokenConverter accessTokenConverter() {
+    public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter jwtAccessTokenConverter
                 = new JwtAccessTokenConverter();
         jwtAccessTokenConverter.setSigningKey("sign-key");
@@ -61,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Bean
-    TokenStore tokenStore() {
+    public TokenStore tokenStore() {
         JwtTokenStore tokenStore = new JwtTokenStore(accessTokenConverter());
         tokenStore.setApprovalStore(approvalStore());
         return tokenStore;
