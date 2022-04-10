@@ -14,6 +14,8 @@ import org.springframework.security.oauth2.provider.ClientDetails;
 import java.util.*;
 
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClientVO implements ClientDetails {
 
     private String clientId;
