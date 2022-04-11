@@ -1,43 +1,39 @@
 package com.example.oauthservice.module.client.service;
 
-import ch.qos.logback.core.net.server.Client;
+
 import com.example.oauthservice.module.client.domain.ClientVO;
 import com.example.oauthservice.module.client.jpa.entity.ClientEntity;
 import com.example.oauthservice.module.client.jpa.repository.ClientRepository;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.ui.ModelMap;
+
+import javax.transaction.Transactional;
 
 
 @Service
+@RequiredArgsConstructor
 public class ClientService implements ClientDetailsService {
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
+
+    private final ModelMapper modelMapper;
+
+
 
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
-//        return ClientVO.builder()
-//                .clientSecret(passwordEncoder.encode("qwer1234"))
-//                .clientId("client")
-//                .authorities("user,admin")
-//                .scope("read,write,trust")
-//                .accessTokenValiditySeconds(10000)
-//                .refreshTokenValiditySeconds(100000)
-//                .grantTypes("authorization_code,implicit,password,client_credentials,refresh_token")
-//                .redirectUri("/oauth-callback")
-//                .autoApprove(false)
-//                .resourceIds("client")
-//                .build();
         ClientEntity client = clientRepository.findClientEntityByClientId(clientId);
         ClientVO clientVO = client == null ? null :
+                //modelMapper.map(client,ClientVO.class);
                 ClientVO.builder()
                    .clientSecret(client.getClientSecret())
                   .clientId(client.getClientId())
@@ -50,7 +46,16 @@ public class ClientService implements ClientDetailsService {
                   .autoApprove(client.isAutoApprove())
                   .resourceIds(client.getResourceIds())
                   .build();
+
         return clientVO;
     }
+
+    @Transactional
+    public ClientVO saveClient(ClientVO clientVO) {
+        ClientEntity client =  modelMapper.map(clientVO,ClientEntity.class);
+        ClientEntity add =  clientRepository.save(client);
+        return modelMapper.map(add,ClientVO.class);
+    }
+
 
 }

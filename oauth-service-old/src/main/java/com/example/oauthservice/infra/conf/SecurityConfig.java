@@ -67,5 +67,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return tokenStore;
     }
 
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .mvcMatchers("/", "/client","/client/**").permitAll()
+                .anyRequest().authenticated();
+
+    }
+
 
 }

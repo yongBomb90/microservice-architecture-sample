@@ -1,6 +1,7 @@
 package com.example.oauthservice.infra.conf;
 
 import com.example.oauthservice.module.client.service.ClientService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,31 +22,22 @@ import javax.sql.DataSource;
 
 @EnableAuthorizationServer
 @Configuration
+@RequiredArgsConstructor
 public class AuthrizationConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    TokenStore tokenStore;
+    private final TokenStore tokenStore;
 
-    @Autowired
-    ApprovalStore approvalStore;
+    private final ApprovalStore approvalStore;
 
-    @Autowired
-    AccessTokenConverter accessTokenConverter;
+    private final AccessTokenConverter accessTokenConverter;
 
-    @Autowired
-    UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-    @Resource
-    AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    DataSource dataSource;
-
-    @Autowired
-    ClientService clientService;
+    private final ClientService clientService;
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
@@ -55,18 +47,7 @@ public class AuthrizationConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-//        clients
-//                .inMemory()
-//                .withClient("client")
-//                .secret(passwordEncoder.encode("qwer1234"))
-//                .authorizedGrantTypes("authorization_code", "implicit", "password", "client_credentials", "refresh_token")
-//                .scopes("read","write","trust")
-//                .accessTokenValiditySeconds(10*60)
-//                .refreshTokenValiditySeconds(60*10*60)
-//        ;
-
         clients.withClientDetails(clientService);
-
     }
 
     @Override
