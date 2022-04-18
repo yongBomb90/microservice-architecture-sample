@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public class ClientController {
 
     // TODO 공통 RESPONSE ENTITY처리
     @PostMapping(value = "/client")
-    public Map<String,Object> saveClient(ClientSaveForm clientSaveForm) {
+    public Map<String,Object> saveClient( @Valid ClientSaveForm clientSaveForm) {
 
         ClientVO clientVO =
                 clientService.saveClient(modelMapper.map(clientSaveForm, ClientVO.class));

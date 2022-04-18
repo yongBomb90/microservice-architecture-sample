@@ -14,7 +14,7 @@ public class ClientEntity {
     @Column(name = "SEQ")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
-    @Column(name = "CLIENT_ID" , unique = true)
+    @Column(name = "CLIENT_ID" , unique = true , length = 128)
     private String clientId;
     @Column(name = "CLIENT_SECRET")
     private String clientSecret;
