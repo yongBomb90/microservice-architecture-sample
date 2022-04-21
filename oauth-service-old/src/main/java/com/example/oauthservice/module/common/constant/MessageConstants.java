@@ -1,4 +1,4 @@
-package com.example.oauthservice.module.constant;
+package com.example.oauthservice.module.common.constant;
 
 public class MessageConstants {
 }
